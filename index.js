@@ -4,8 +4,9 @@ var through = require('through2');
 var Checker = require('jscs');
 var loadConfigFile = require('jscs/lib/cli-config');
 var assign = require('object-assign');
+var reporters = require('./reporters');
 
-module.exports = function (options) {
+module.exports = exports = function (options) {
 	options = options || '.jscsrc';
 
 	if (typeof options === 'string') {
@@ -14,7 +15,6 @@ module.exports = function (options) {
 
 	options = assign({esnext: false}, options);
 
-	var out = [];
 	var checker = new Checker({esnext: !!options.esnext});
 
 	checker.registerDefaultRules();
@@ -62,24 +62,16 @@ module.exports = function (options) {
 			if (errorList.length > 0) {
 				file.jscs.success = false;
 				file.jscs.errorCount = errorList.length;
-				file.jscs.errors = errorList;
+				file.jscs.errors = errors;
 			}
-
-			errorList.forEach(function (err) {
-				out.push(errors.explainError(err, true));
-			});
 		} catch (err) {
-			out.push(err.stack.replace('null:', file.relative + ':'));
+			console.error(err.stack.replace('null:', file.relative + ':'));
 		}
 
 		cb(null, file);
-	}, function (cb) {
-		if (out.length > 0) {
-			this.emit('error', new gutil.PluginError('gulp-jscs', out.join('\n\n'), {
-				showStack: false
-			}));
-		}
-
-		cb();
 	});
 };
+
+exports.failReporter = reporters.fail;
+exports.loadReporter = reporters.loadReporter;
+exports.reporter = reporters.reporter;
