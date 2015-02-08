@@ -4,9 +4,9 @@ var through = require('through2');
 var Checker = require('jscs');
 var loadConfigFile = require('jscs/lib/cli-config');
 var assign = require('object-assign');
-var reporters = require('./reporters');
+var reporter = require('./reporters');
 
-module.exports = exports = function (options) {
+var plugin = module.exports = function (options) {
 	options = options || '.jscsrc';
 
 	if (typeof options === 'string') {
@@ -72,6 +72,4 @@ module.exports = exports = function (options) {
 	});
 };
 
-exports.failReporter = reporters.fail;
-exports.loadReporter = reporters.loadReporter;
-exports.reporter = reporters.reporter;
+plugin.reporter = reporter;
