@@ -49,23 +49,19 @@ var plugin = module.exports = function (options) {
 			return;
 		}
 
-		try {
-			var errors = checker.checkString(file.contents.toString(), file.relative);
-			var errorList = errors.getErrorList();
+		var errors = checker.checkString(file.contents.toString(), file.relative);
+		var errorList = errors.getErrorList();
 
-			file.jscs = {
-				success: true,
-				errorCount: 0,
-				errors: []
-			};
+		file.jscs = {
+			success: true,
+			errorCount: 0,
+			errors: []
+		};
 
-			if (errorList.length > 0) {
-				file.jscs.success = false;
-				file.jscs.errorCount = errorList.length;
-				file.jscs.errors = errors;
-			}
-		} catch (err) {
-			console.error(err.stack.replace('null:', file.relative + ':'));
+		if (errorList.length > 0) {
+			file.jscs.success = false;
+			file.jscs.errorCount = errorList.length;
+			file.jscs.errors = errors;
 		}
 
 		cb(null, file);
