@@ -40,6 +40,7 @@
     "through2": "^0.6.1"
   },
   "devDependencies": {
-    "mocha": "*"
+    "mocha": "*",
+    "stream-assert": "^2.0.2"
   }
 }
